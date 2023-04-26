@@ -29,4 +29,12 @@ public interface AnswerRepository extends JpaRepository<Answer, Integer> {
 
     @Query("SELECT a.question FROM Answer a WHERE a.id = :answerId")
     Question findQuestionByAnswerId(@Param("answerId") Integer answerId);
+    
+    @Query(value = "SELECT id, content, (LENGTH(:keyword) - LENGTH(REPLACE(content, :keyword, ''))) / LENGTH(:keyword) AS score " +
+            "FROM Answer " +
+            "WHERE content LIKE %:keyword% " +
+            "ORDER BY score DESC")
+    List<Object[]> findByKeyword(@Param("keyword") String keyword);
+    
+    
 }

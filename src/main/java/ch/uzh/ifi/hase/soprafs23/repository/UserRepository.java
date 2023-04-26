@@ -26,4 +26,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void updatePassword(@Param("newPassword") String newPassword, @Param("id") Integer id);
 
     void deleteById(Integer id);
+    
+    @Query(value = "SELECT id, username, (LENGTH(:keyword) / LENGTH(username)) AS score " +
+               "FROM User " +
+               "WHERE username LIKE %:keyword% " +
+               "ORDER BY score DESC")
+    List<User> UserfindByKeyword(@Param("keyword") String keyword);
+
 }

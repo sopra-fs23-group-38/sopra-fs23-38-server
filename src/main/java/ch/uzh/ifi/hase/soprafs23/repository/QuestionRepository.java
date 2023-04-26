@@ -25,6 +25,14 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     Question findQuestionById(Integer ID);
 
     void deleteById(Integer id);
+    
+    @Query(value = "SELECT id, title, description, " +
+                    "((LENGTH(title) - LENGTH(REPLACE(title, :keyword, ''))) / LENGTH(:keyword) * 2) + " +
+                    "((LENGTH(description) - LENGTH(REPLACE(description, :keyword, ''))) / LENGTH(:keyword)) AS score " +
+                    "FROM Question " +
+                    "WHERE title LIKE %:keyword% OR description LIKE %:keyword% " +
+                    "ORDER BY score DESC")
+    List<Question> QuestionfindByKeyword(@Param("keyword") String keyword);
 
 }
 
