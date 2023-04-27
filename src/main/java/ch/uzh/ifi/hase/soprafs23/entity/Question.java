@@ -1,85 +1,68 @@
-package com.example.accessingdatamysql;
-
-import jakarta.persistence.*;
+package ch.uzh.ifi.hase.soprafs23.entity;
 
 import java.util.Date;
+
+
+import javax.persistence.*;
+
 
 @Entity
 public class Question {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-
-    @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
-
     private String title;
-
-    @Column(columnDefinition="TEXT")
     private String description;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created_at;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updated_at;
-
+    private Integer who_asks;
+    private Date change_time;
     private Integer answer_count;
 
     public Integer getId() {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public Date getCreated_at() {
-        return created_at;
-    }
-
-    public Date getUpdated_at() {
-        return updated_at;
-    }
-
-    public Integer getAnswer_count() {
-        return answer_count;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
+    public Integer getWho_asks() {
+        return who_asks;
     }
 
-    public void setUpdated_at(Date updated_at) {
-        this.updated_at = updated_at;
+    public void setWho_asks(Integer who_asks) {
+        this.who_asks = who_asks;
     }
 
-    public void setAnswer_count(Integer answer_count) {
+    public java.util.Date getChange_time() {
+        return change_time;
+    }
+
+    public void setChange_time(Date change_time) {
+        this.change_time = change_time;
+    }
+
+
+    public Integer getAnswerCount() {
+        return answer_count;
+    }
+
+    public void setAnswerCount(Integer answer_count) {
         this.answer_count = answer_count;
     }
 

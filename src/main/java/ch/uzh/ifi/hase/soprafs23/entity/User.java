@@ -1,10 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
@@ -20,7 +17,7 @@ public class  User {
     @Column(name="email")
     private String email;
     @Column(name="register_time")
-    private Timestamp register_time;
+    private Date register_time;
     @Column(name="has_new")
     private Boolean hasNew;
 
@@ -56,11 +53,11 @@ public class  User {
         this.email = email;
     }
 
-    public Timestamp getRegister_time() {
+    public Date getRegister_time() {
         return register_time;
     }
 
-    public void setRegister_time(Timestamp register_time) {
+    public void setRegister_time(Date register_time) {
         this.register_time = register_time;
     }
 

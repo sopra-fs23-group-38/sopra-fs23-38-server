@@ -1,40 +1,45 @@
-package com.example.accessingdatamysql;
+package ch.uzh.ifi.hase.soprafs23.repository;
 
-import jakarta.transaction.Transactional;
+import ch.uzh.ifi.hase.soprafs23.entity.Answer;
+import ch.uzh.ifi.hase.soprafs23.entity.Question;
+import ch.uzh.ifi.hase.soprafs23.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-
-import com.example.accessingdatamysql.User;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
-@Repository
+
 public interface AnswerRepository extends JpaRepository<Answer, Integer> {
-    @Query("SELECT COUNT(*) FROM Answer WHERE user.id =:userId AND question.id =:questionId")
-    Integer findByUserAndQuestion(@Param("userId")Integer userId, @Param("questionId")Integer questionId);
+    @Query(value = "SELECT * FROM answer WHERE question_id = :questionId ORDER BY vote_count DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
+    List<Answer> findByQuestionIdOrderByVoteCountDesc(@Param("questionId") Integer questionId, @Param("offset") int offset, @Param("limit") int limit);
 
-//    @Query(value = "SELECT * FROM answer WHERE question_id = :questionId", nativeQuery = true)
-//    List<Answer> findByQuestionId(@Param("questionId") Integer questionId);
+    @Query("SELECT a.who_answers FROM Answer a WHERE a.id = :answerId")
+    Integer findAnswererIdById(@Param("answerId") Integer answerId);
 
-    List<Answer> findByQuestionId(Integer questionId);
+    @Query("SELECT u FROM User u WHERE u.id = :answererId")
+    User findUserById(@Param("answererId") Integer answererId);
 
-    List<Answer> findByUserId(Integer userId);
+    @Query("SELECT a FROM Answer a WHERE a.who_answers = :who_answers ORDER BY a.change_time DESC")
+    List<Answer> findAllByWhoAnswersOrderByChangeTimeDesc(@Param("who_answers") Integer whoAnswers);
 
-    Answer findAnswerById(Integer answerId);
 
-    void deleteById(Integer id);
+    @Query("SELECT q.title FROM Question q WHERE q.id = " +
+            "(SELECT a.question_id FROM Answer a WHERE a.id = :answerId)")
+    String findAnswerToQuestionTitle(@Param("answerId") Integer answerId);
 
-    @Query("SELECT a.question FROM Answer a WHERE a.id = :answerId")
-    Question findQuestionByAnswerId(@Param("answerId") Integer answerId);
-    
-    @Query(value = "SELECT id, content, (LENGTH(:keyword) - LENGTH(REPLACE(content, :keyword, ''))) / LENGTH(:keyword) AS score " +
-            "FROM Answer " +
-            "WHERE content LIKE %:keyword% " +
-            "ORDER BY score DESC")
-    List<Object[]> findByKeyword(@Param("keyword") String keyword);
-    
-    
+    @Modifying
+    @Query("DELETE FROM Answer a WHERE a.id = :answerId")
+    void deleteAnswerById(@Param("answerId") Integer answerId);
+
+    @Query(value = "SELECT id, content, (LENGTH(?1) / LENGTH(content)) AS score " +
+            "FROM answer " +
+            "WHERE content LIKE CONCAT('%', ?1, '%') " +
+            "ORDER BY score DESC", nativeQuery = true)
+    List<Object[]> AnswerFindByKeyword(String keyword);
+
+    @Query(value = "SELECT COUNT(*) FROM Answer WHERE question_id = ?1", nativeQuery = false)
+    int countAnswersByQuestionId(Integer questionId);
+
+
 }

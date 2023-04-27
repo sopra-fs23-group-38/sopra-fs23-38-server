@@ -2,35 +2,28 @@ package ch.uzh.ifi.hase.soprafs23.repository;
 
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import org.springframework.data.repository.query.Param;
+import java.util.List;
 
 @Repository("userRepository")
-public interface UserRepository extends JpaRepository<User, Long> {
-  User findByName(String name);
+public interface UserRepository extends JpaRepository<User, Integer> {
 
-  User findByUsername(String username);
+    @Query("SELECT u FROM User u WHERE u.username = :username AND u.password = :password")
+    List<User> loginWithUsername(@Param("username") String username, @Param("password") String password);
 
-  User findByUsernameAndPassword(String username, String password);
 
-  User findById(long id);
-    
-    
-  @Query("SELECT u FROM User u WHERE u.id = :userId")
-    User findUserByUserId(@Param("userId") Integer userId);
+    User findByUsername(String username);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE User SET password=:newPassword WHERE id>:id")
-    void updatePassword(@Param("newPassword") String newPassword, @Param("id") Integer id);
+    @Query("SELECT u.id FROM User u WHERE u.username = :username")
+    Integer findIdByUsername(String username);
 
-    void deleteById(Integer id);
-    
-    @Query(value = "SELECT id, username, (LENGTH(:keyword) / LENGTH(username)) AS score " +
-               "FROM User " +
-               "WHERE username LIKE %:keyword% " +
-               "ORDER BY score DESC")
-    List<User> UserfindByKeyword(@Param("keyword") String keyword);
+    @Query(value = "SELECT id, username, (LENGTH(?1) / LENGTH(username)) AS score " +
+            "FROM user " +
+            "WHERE username LIKE CONCAT('%', ?1, '%') " +
+            "ORDER BY score DESC", nativeQuery = true)
+    List<Object[]> UserFindByKeyword(String keyword);
 
 }

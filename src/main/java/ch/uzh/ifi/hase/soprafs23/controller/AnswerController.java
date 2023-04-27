@@ -1,71 +1,78 @@
-package com.example.accessingdatamysql;
+package ch.uzh.ifi.hase.soprafs23.controller;
 
-import com.example.accessingdatamysql.DTO.AnswerGetDTO;
-import com.example.accessingdatamysql.mapper.DTOMapper;
+import ch.uzh.ifi.hase.soprafs23.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import ch.uzh.ifi.hase.soprafs23.service.QuestionService;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 
-@Controller    // This means that this class is a Controller // entity mapping
-@RequestMapping(path="/demo")
+@RestController
+@RequestMapping("/answer")
 public class AnswerController {
-
-    private final AnswerService answerService;
-
-    private final AnswerRepository answerRepository;
-
     @Autowired
-    public AnswerController(AnswerService answerService, AnswerRepository answerRepository) {
-        this.answerService = answerService;
-        this.answerRepository = answerRepository;
+    private AnswerService answerService;
 
-    }
-    @PostMapping("/answers")
-    public @ResponseBody Answer createAnswer(@RequestParam Integer user_id,
-                                               @RequestParam Integer question_id,
-                                               @RequestParam String content) {
-
-
-        return answerService.createAnswer(user_id,question_id,content);
-
-
+    @PostMapping("/createAnswer")
+    public String createAnswer(@RequestParam("questionID") String questionID,
+                                  @RequestParam("content") String content,
+                                  HttpServletRequest request) {
+        Integer questionId = Integer.parseInt(questionID);
+        return answerService.createAnswer(questionId, content, request);
     }
 
-    @GetMapping("/answers/all/q/{questionId}")
-    public @ResponseBody Iterable<Answer> getAnswerByQuestionId(@PathVariable Integer questionId) {
-        return answerRepository.findByQuestionId(questionId);
-    }
-//    @GetMapping("/answers/all/{questionId}")
-//    public @ResponseBody Iterable<AnswerGetDTO> getAnswerByUserId(@PathVariable Integer questionId) {
-//        List<Answer> answers = answerRepository.findByQuestionId(questionId);
-//        return DTOMapper.toDtoList(answers);
-//    }
-    @GetMapping("/answers/all/u/{userId}")
-    public @ResponseBody Iterable<Answer> getAnswerByUserId(@PathVariable Integer userId) {
-        return answerRepository.findByUserId(userId);
-    }
+    @GetMapping("/getAllAnstoOneQ")
+    public String getAllAnsToOneQuestion(@RequestParam("questionID") String questionID,
+                                           @RequestParam("pageIndex") String pageIndex,
+                                           HttpServletRequest request) {
 
-    @PutMapping("/answers/update/{answerId}")
-    public @ResponseBody String updateAnswerContent(@PathVariable Integer answerId,
-                                      @RequestParam String newContent) {
-        answerService.updateAnswerContent(answerId,newContent);
-        return "Answer updated successfully";
+        int pageIndexInt = Integer.parseInt(pageIndex);
+        int questionId = Integer.parseInt(questionID);
+        return answerService.getAllAnsToOneQuestion(questionId, pageIndexInt, request);
 
     }
 
-    @DeleteMapping(path="/answers/delete/{id}")
-    public @ResponseBody String deleteQuestion(@PathVariable Integer id) {
-        answerService.deleteOneAnswer(id);
-        return "Answer " + id + " deleted";
+    @GetMapping("/getAnswerById")
+    public String getAnswerById(@RequestParam("ID") String ID,
+                            HttpServletRequest request) {
+        int id = Integer.parseInt(ID);
+        return answerService.getAnswerById(id, request);
     }
 
+    @GetMapping("/getAnswersByWho")
+    public String getAnswersByWho(@RequestParam("answererID") String answererID) {
+        int answererId = Integer.parseInt(answererID);
+        return answerService.getAnswersByWho(answererId);
+    }
 
+    @GetMapping("/getHowManyPages")
+    public String getTotalPageCount(@RequestParam("which_question") Integer which_question) {
+        return answerService.getHowManyPages(which_question);
+    }
+
+    @PostMapping("/vote")
+    public String UporDownVote(@RequestParam("ID") String ID,
+                                @RequestParam("UporDownVote") String UporDownVote) {
+
+        int id = Integer.parseInt(ID);
+        int vote = Integer.parseInt(UporDownVote);
+        return answerService.UporDownVote(id,vote);
+    }
+
+    @PostMapping("/updateAnswer")
+    public String updateAnswer(@RequestParam("ID") String ID,
+                               @RequestParam("newContent") String newContent,
+                               HttpServletRequest request) {
+        int Id = Integer.parseInt(ID);
+        return answerService.updateAnswer(Id, newContent, request);
+    }
+
+    @DeleteMapping ("/deleteAnswer")
+    public String deleteAnswer(@RequestParam("ID") String ID,
+                               HttpServletRequest request) {
+        Integer Id = Integer.parseInt(ID);
+        return answerService.deleteAnswer(Id, request);
+    }
 
 }

@@ -1,38 +1,38 @@
-package com.example.accessingdatamysql;
+package ch.uzh.ifi.hase.soprafs23.repository;
 
-
-import jakarta.transaction.Transactional;
+import ch.uzh.ifi.hase.soprafs23.entity.Answer;
+import ch.uzh.ifi.hase.soprafs23.entity.Question;
+import ch.uzh.ifi.hase.soprafs23.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-
-import com.example.accessingdatamysql.User;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
-    List<Question> findByUserId(Integer userId);
+    @Query(value = "SELECT * FROM question ORDER BY change_time DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
+    List<Question> findTopNByOrderByTimeDesc(@Param("offset") int offset, @Param("limit") int limit);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE Question SET title=:newTitle, description=:newDescription, updated_at=CURRENT_TIMESTAMP WHERE id=:id")
-    void updateQuestion(@Param("newTitle") String newTitle, @Param("newDescription") String newDescription, @Param("id") Integer id);
 
-    Question findQuestionById(Integer ID);
 
-    void deleteById(Integer id);
-    
+    @Query("SELECT q.who_asks FROM Question q WHERE q.id = :questionId")
+    Integer findQuestionerIdById(@Param("questionId") Integer questionId);
+
+    @Query("SELECT u FROM User u WHERE u.id = :questionerId")
+    User findUserById(@Param("questionerId") Integer questionerId);
+
+    @Query("SELECT q FROM Question q WHERE q.who_asks = :who_asks ORDER BY q.change_time DESC")
+    List<Question> findAllByWhoAsksOrderByChangeTimeDesc(@Param("who_asks") Integer who_asks);
+
     @Query(value = "SELECT id, title, description, " +
-                    "((LENGTH(title) - LENGTH(REPLACE(title, :keyword, ''))) / LENGTH(:keyword) * 2) + " +
-                    "((LENGTH(description) - LENGTH(REPLACE(description, :keyword, ''))) / LENGTH(:keyword)) AS score " +
-                    "FROM Question " +
-                    "WHERE title LIKE %:keyword% OR description LIKE %:keyword% " +
-                    "ORDER BY score DESC")
-    List<Question> QuestionfindByKeyword(@Param("keyword") String keyword);
+            "((LENGTH(title) - LENGTH(REPLACE(title, :keyword, ''))) / LENGTH(:keyword) * 2) + " +
+            "((LENGTH(description) - LENGTH(REPLACE(description, :keyword, ''))) / LENGTH(:keyword)) AS score " +
+            "FROM question " +
+            "WHERE title LIKE %:keyword% OR description LIKE %:keyword% " +
+            "ORDER BY score DESC",
+            nativeQuery = true)
+    List<Object[]> QuestionFindByKeyword(@Param("keyword") String keyword);
+
 
 }
-
