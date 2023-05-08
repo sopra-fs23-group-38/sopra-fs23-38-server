@@ -71,7 +71,8 @@ public class AnswerService {
                 Optional<User> ans_to_question_user = userRepository.findById(question.getWho_asks());
                 if (ans_to_question_user.isPresent()) {
                     User ans_to_question_User = ans_to_question_user.get();
-                    ans_to_question_User.setHasNew(true);
+//                    ans_to_question_User.setHasNew(true);
+                    ans_to_question_User.setHasNew(ans_to_question_User.getHasNew()+1);
                     userRepository.save(ans_to_question_User);
                 }
             }
