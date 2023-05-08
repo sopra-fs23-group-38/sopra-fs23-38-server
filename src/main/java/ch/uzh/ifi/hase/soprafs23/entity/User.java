@@ -19,7 +19,8 @@ public class  User {
     @Column(name="register_time")
     private Date register_time;
     @Column(name="has_new")
-    private Boolean hasNew;
+//    private Boolean hasNew;
+    private Integer hasNew;
 
     public Integer getId() {
         return id;
@@ -61,11 +62,11 @@ public class  User {
         this.register_time = register_time;
     }
 
-    public Boolean getHasNew() {
+    public Integer getHasNew() {
         return hasNew;
     }
 
-    public void setHasNew(Boolean hasNew) {
+    public void setHasNew(Integer hasNew) {
         this.hasNew = hasNew;
     }
 }
