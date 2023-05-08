@@ -84,7 +84,8 @@ public class MessageController {
                 boolean present = byId2.isPresent();
                 if (present) {
                     User toUser = byId2.get();
-                    toUser.setHasNew(true);
+//                    toUser.setHasNew(true);
+                    toUser.setHasNew(toUser.getHasNew()+1);
                     userRepository.save(toUser);
                 }
             }
