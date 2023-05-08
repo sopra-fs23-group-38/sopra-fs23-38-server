@@ -56,7 +56,8 @@ public class UserController {
         Optional<User> byId = userRepository.findById(userId);
         if (byId.isPresent()) {
             User user = byId.get();
-            user.setHasNew(false);
+//            user.setHasNew(false);
+            user.setHasNew(0);
             userRepository.save(user);
         }
 
