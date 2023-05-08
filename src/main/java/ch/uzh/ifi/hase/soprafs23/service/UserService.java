@@ -39,8 +39,8 @@ public class UserService {
             newUser.setPassword(request.getParameter("password"));
             newUser.setEmail(request.getParameter("email"));
             newUser.setRegister_time(Date.from(Instant.now()));
-            newUser.setHasNew(false);
-
+//            newUser.setHasNew(false);
+            newUser.setHasNew(0);
             userRepository.save(newUser);
             infobody.put("success", "true");
 
