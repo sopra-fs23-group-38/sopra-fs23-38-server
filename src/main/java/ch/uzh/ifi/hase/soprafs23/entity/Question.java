@@ -16,7 +16,16 @@ public class Question {
     private Integer who_asks;
     private Date change_time;
     private Integer answer_count;
+    @Column(name = "tag")
+    private String tag; 
 
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
     public Integer getId() {
         return id;
     }
