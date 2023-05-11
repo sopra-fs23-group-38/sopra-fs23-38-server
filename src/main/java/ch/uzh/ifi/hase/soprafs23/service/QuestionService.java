@@ -28,11 +28,13 @@ public class QuestionService {
         Map<String,Object> infobody = new HashMap<>();
         String title = request.getParameter("title");
         String description = request.getParameter("description");
+        String tag = request.getParameter("tag"); // Add this line
         Integer who_asks = auxiliary.extractUserID(request);
         if (title != null && who_asks != null) {
             Question newquestion = new Question();
             newquestion.setTitle(title);
             newquestion.setDescription(description);
+            newquestion.setTag(tag);
             newquestion.setWho_asks(who_asks);
             newquestion.setChange_time(Date.from(Instant.now()));
             newquestion.setAnswerCount(0);
@@ -49,13 +51,19 @@ public class QuestionService {
     }
 
     @Transactional
-    public String getAllQuestions(Integer pageIndex, HttpServletRequest request) {
+    public String getAllQuestions(Integer pageIndex, String tag, HttpServletRequest request) {
 
         List<Map<String, Object>> infobody = new ArrayList<>();
 
         int limit = 7;
         int offset = (pageIndex-1) * limit;
-        List<Question> existingQuestions = questionRepository.findTopNByOrderByTimeDesc(offset, limit);
+        List<Question> existingQuestions;
+
+        if (tag == null || tag.isEmpty()) {
+            existingQuestions = questionRepository.findTopNByOrderByTimeDesc(offset, limit);
+        } else {
+            existingQuestions = questionRepository.findTopNByTagOrderByTimeDesc(tag, offset, limit);
+        }
 
         if (existingQuestions!= null) {
             for (Question question : existingQuestions) {
