@@ -38,6 +38,11 @@ public class auxiliary {
         Gson gson = new Gson();
         return gson.toJson(messages);
     }
+    
+    public static String CommentListToJson(List<Map<String, Object>> commentlist){
+        Gson gson = new Gson();
+        return gson.toJson(commentlist);
+    }
 
     public static Cookie Identification(Integer userId) {
 
