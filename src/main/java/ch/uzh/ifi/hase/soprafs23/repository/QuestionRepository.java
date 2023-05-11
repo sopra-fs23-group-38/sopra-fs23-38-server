@@ -33,6 +33,8 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
             "ORDER BY score DESC",
             nativeQuery = true)
     List<Object[]> QuestionFindByKeyword(@Param("keyword") String keyword);
-
+    
+    @Query(value = "SELECT * FROM question WHERE tag = :tag ORDER BY change_time DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
+    List<Question> findTopNByTagOrderByTimeDesc(@Param("tag") String tag, @Param("offset") int offset, @Param("limit") int limit);
 
 }
