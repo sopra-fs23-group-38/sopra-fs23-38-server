@@ -26,14 +26,14 @@ public class QuestionController {
     public String createQuestion(HttpServletRequest request) {
         return questionService.createQuestion(request);
     }
-
+    
     @GetMapping("/getAllQuestions")
     public String getAllQuestions(@RequestParam("pageIndex") String pageIndex,
-                                     HttpServletRequest request) {
+                                  @RequestParam(value = "tag", required = false) String tag,
+                                  HttpServletRequest request) {
 
         Integer pageIndexInt = Integer.parseInt(pageIndex);
-        return questionService.getAllQuestions(pageIndexInt, request);
-
+        return questionService.getAllQuestions(pageIndexInt, tag, request);
     }
 
     @GetMapping("/getQuestionById")
