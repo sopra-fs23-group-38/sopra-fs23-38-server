@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 public class TranslatorController {
     @PostMapping("/")
-    public String translate(@RequestParam("content") String content) {
+    public String translate(@RequestParam("content") String content, @RequestParam("targetLanguage") String targetLanguage) {
         try {
             Credential cred = new Credential("AKIDiJhvtcbMjDQN3WxCSWLyb1Rgktrerdyg", "c9pX4YWP3buDJAkBONlu1xiVSzHkx9E4");
             HttpProfile httpProfile = new HttpProfile();
@@ -31,8 +31,8 @@ public class TranslatorController {
             TmtClient client = new TmtClient(cred, "ap-chengdu", clientProfile);
             TextTranslateRequest req = new TextTranslateRequest();
             req.setSourceText(content);
-            req.setSource("en");
-            req.setTarget("ko");
+            req.setSource("auto");
+            req.setTarget(targetLanguage);
             req.setProjectId(0L);
             TextTranslateResponse resp = client.TextTranslate(req);
             HashMap<String, String> map = new HashMap<>();
