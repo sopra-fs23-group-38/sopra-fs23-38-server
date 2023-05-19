@@ -17,8 +17,7 @@ public class SearchController {
     private SearchService searchService;
 
     @GetMapping("/")
-    public List<Map<String, Object>> searchKeyword(@RequestParam("keyword") String keyword) {
-        System.out.println("keyword");
-        return searchService.searchKeyword(keyword);
+    public List<Map<String, Object>> searchKeyword(@RequestParam("keyword") String keyword,@RequestParam("searchType") String searchType) {
+        return searchService.searchKeyword(keyword,searchType);
     }
 }
