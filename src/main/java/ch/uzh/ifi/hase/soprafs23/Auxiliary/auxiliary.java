@@ -18,7 +18,10 @@ public class auxiliary {
     public static String listMapToJson(List<Map<String, Object>> list) {
         return gson.toJson(list);
     }
-
+    public static String CommentListToJson(List<Map<String, Object>> commentlist){
+        Gson gson = new Gson();
+        return gson.toJson(commentlist);
+    }
     public static String mapToJson(Map<String, String> map) {
         Gson gson = new GsonBuilder().create();
         return gson.toJson(map);
@@ -37,11 +40,6 @@ public class auxiliary {
     public static String messagesToJson(List<Message> messages) {
         Gson gson = new Gson();
         return gson.toJson(messages);
-    }
-    
-    public static String CommentListToJson(List<Map<String, Object>> commentlist){
-        Gson gson = new Gson();
-        return gson.toJson(commentlist);
     }
 
     public static Cookie Identification(Integer userId) {

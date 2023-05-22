@@ -19,9 +19,10 @@ public class  User {
     @Column(name="register_time")
     private Date register_time;
     @Column(name="has_new")
-//    private Boolean hasNew;
     private Integer hasNew;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
     public Integer getId() {
         return id;
     }
@@ -68,5 +69,13 @@ public class  User {
 
     public void setHasNew(Integer hasNew) {
         this.hasNew = hasNew;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl =avatarUrl;
     }
 }

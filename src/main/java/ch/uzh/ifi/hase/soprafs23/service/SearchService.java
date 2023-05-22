@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.service;
 
 
 import ch.uzh.ifi.hase.soprafs23.repository.AnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.CommentRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.QuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class SearchService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
 
     @Transactional
@@ -68,7 +72,19 @@ public class SearchService {
                 }
                 break;
             case "Comment":
-                System.out.println(2);
+                List<Map<String, Object>> commentSearchList = searchComment(keyword);
+                int maxElementsC = Math.min(commentSearchList .size(), 5);
+                for(int i = 0; i < maxElementsC; i++) {
+                    Map<String, Object> commentMap = commentSearchList.get(i);
+                    Map<String, Object> trans_info = new HashMap<>();
+
+                    trans_info.put("id",commentMap.get("id"));
+                    trans_info.put("name", commentMap.get("content"));
+                    trans_info.put("type", "Comment");
+                    trans_info.put("html_url", "/question/answer/" + commentMap.get("answer_id"));
+                    total.add(trans_info);
+                }
+                break;
 
 
             case "All":
@@ -76,9 +92,13 @@ public class SearchService {
                 List<Map<String, Object>> userList = searchUser(keyword);
                 List<Map<String, Object>> questionList = searchQuestion(keyword);
                 List<Map<String, Object>> answerList = searchAnswer(keyword);
+                List<Map<String, Object>> commentList = searchComment(keyword);
+
                 int maxU = Math.min(userList.size(), 5);
                 int maxQ = Math.min(questionList.size(), 5);
                 int maxA = Math.min(answerList.size(), 5);
+                int maxC = Math.min(commentList .size(), 5);
+
                 for(int i = 0; i < maxU; i++) {
                     Map<String, Object> userMap = userList.get(i);
                     Map<String, Object> trans_info = new HashMap<>();
@@ -104,6 +124,15 @@ public class SearchService {
                     trans_info.put("name", answerMap.get("content"));
                     trans_info.put("type", "Answer");
                     trans_info.put("html_url", "/question/" + answerMap.get("question_id"));
+                    total.add(trans_info);
+                }
+                for(int i = 0; i < maxC; i++) {
+                    Map<String, Object> commentMap = commentList.get(i);
+                    Map<String, Object> trans_info = new HashMap<>();
+                    trans_info.put("id",commentMap.get("id"));
+                    trans_info.put("name", commentMap.get("content"));
+                    trans_info.put("type", "Comment");
+                    trans_info.put("html_url", "/question/answer/" + commentMap.get("answer_id"));
                     total.add(trans_info);
                 }
                 break;
@@ -160,4 +189,24 @@ public class SearchService {
             answerSearchList.add(mapA);
         }
         return answerSearchList;
-    }}
+    }
+
+    private List<Map<String, Object>> searchComment(String keyword) {
+        List<Map<String, Object>> commentSearchList = new ArrayList<>();
+        List<Object[]> commentResult = commentRepository.CommentFindByKeyword(keyword);
+        for (Object[] result : commentResult) {
+            Map<String, Object> mapC = new HashMap<>();
+            int id = (int) result[0];
+            String content = (String) result[1];
+            int answer_id = (int) result[2];
+            BigDecimal score = (BigDecimal) result[3];
+            mapC.put("id", id);
+            mapC.put("content", content);
+            mapC.put("answer_id", answer_id);
+            mapC.put("score", score.doubleValue());
+            commentSearchList.add(mapC);
+        }
+        return commentSearchList;
+    }
+
+}

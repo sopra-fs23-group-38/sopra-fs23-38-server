@@ -17,8 +17,9 @@ public class Question {
     private Date change_time;
     private Integer answer_count;
     @Column(name = "tag")
-    private String tag; 
+    private String tag; // Add this line
 
+    // Add getter and setter methods for the tag
     public String getTag() {
         return tag;
     }
@@ -26,6 +27,7 @@ public class Question {
     public void setTag(String tag) {
         this.tag = tag;
     }
+
     public Integer getId() {
         return id;
     }

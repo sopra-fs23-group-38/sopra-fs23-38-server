@@ -13,7 +13,8 @@ import java.util.List;
 public interface AnswerRepository extends JpaRepository<Answer, Integer> {
     @Query(value = "SELECT * FROM answer WHERE question_id = :questionId ORDER BY vote_count DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
     List<Answer> findByQuestionIdOrderByVoteCountDesc(@Param("questionId") Integer questionId, @Param("offset") int offset, @Param("limit") int limit);
-
+    @Query(value = "SELECT * FROM answer WHERE question_id = :questionId ORDER BY vote_count DESC ", nativeQuery = true)
+    List<Answer> findByAllQuestionIdOrderByVoteCountDesc(@Param("questionId") Integer questionId);
     @Query("SELECT a.who_answers FROM Answer a WHERE a.id = :answerId")
     Integer findAnswererIdById(@Param("answerId") Integer answerId);
 
@@ -32,7 +33,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Integer> {
     @Query("DELETE FROM Answer a WHERE a.id = :answerId")
     void deleteAnswerById(@Param("answerId") Integer answerId);
 
-    @Query(value = "SELECT id, content, (LENGTH(?1) / LENGTH(content)) AS score " +
+    @Query(value = "SELECT id, content, question_id,(LENGTH(?1) / LENGTH(content)) AS score " +
             "FROM answer " +
             "WHERE content LIKE CONCAT('%', ?1, '%') " +
             "ORDER BY score DESC", nativeQuery = true)
@@ -40,6 +41,22 @@ public interface AnswerRepository extends JpaRepository<Answer, Integer> {
 
     @Query(value = "SELECT COUNT(*) FROM Answer WHERE question_id = ?1", nativeQuery = false)
     int countAnswersByQuestionId(Integer questionId);
+
+    @Query("SELECT u.username FROM User u WHERE u.id = (SELECT a.who_answers FROM Answer a WHERE a.id = :answerId)")
+    List<String> getAnswererUsernameByAnswerId(@Param("answerId") Integer answerId);
+    @Query(value = "SELECT row_index " +
+            "FROM ( " +
+            "SELECT id, ROW_NUMBER() OVER (ORDER BY id) AS row_index " +
+            "FROM answer " +
+            ") AS subquery " +
+            "WHERE id = ?1", nativeQuery = true)
+    Integer findRowIndexById(Integer id);
+
+    @Query(value = "DELETE FROM answer WHERE question_id = ?1",nativeQuery = true)
+    void deleteAnswerByQuestion_id(Integer id);
+
+    @Query(value = "SELECT id FROM answer WHERE question_id = ?1",nativeQuery = true)
+    List<Integer> getAllIdByQuestion_id(Integer id);
 
 
 }

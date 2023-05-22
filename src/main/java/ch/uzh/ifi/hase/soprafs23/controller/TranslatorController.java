@@ -18,7 +18,6 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/translator")
-
 public class TranslatorController {
     @PostMapping("/")
     public String translate(@RequestParam("content") String content, @RequestParam("targetLanguage") String targetLanguage) {
@@ -44,3 +43,4 @@ public class TranslatorController {
         }
     }
 }
+

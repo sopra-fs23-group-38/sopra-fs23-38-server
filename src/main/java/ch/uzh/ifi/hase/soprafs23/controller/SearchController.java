@@ -21,3 +21,4 @@ public class SearchController {
         return searchService.searchKeyword(keyword,searchType);
     }
 }
+

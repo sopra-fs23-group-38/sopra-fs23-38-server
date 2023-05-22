@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ch.uzh.ifi.hase.soprafs23.service.QuestionService;
 
 import javax.servlet.http.HttpServletRequest;
-
 @RestController
 @RequestMapping("/answer")
 public class AnswerController {

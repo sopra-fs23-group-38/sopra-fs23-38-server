@@ -29,7 +29,7 @@ public class UserService {
     public String registerNewUser(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> infobody = new HashMap<>();
 
-       if (request.getParameter("username") == null
+        if (request.getParameter("username") == null
                 || userRepository.findByUsername(request.getParameter("username")) != null) {
             infobody.put("success", "false");
             infobody.put("reason", "This username is already created.");
@@ -38,8 +38,8 @@ public class UserService {
             newUser.setUsername(request.getParameter("username"));
             newUser.setPassword(request.getParameter("password"));
             newUser.setEmail(request.getParameter("email"));
+            newUser.setAvatarUrl(request.getParameter("avatar"));
             newUser.setRegister_time(Date.from(Instant.now()));
-//            newUser.setHasNew(false);
             newUser.setHasNew(0);
             userRepository.save(newUser);
             infobody.put("success", "true");
@@ -52,9 +52,9 @@ public class UserService {
 
     @Transactional
     public String loginOneUser(String username,
-                          String password,
-                          HttpServletRequest request,
-                          HttpServletResponse response) {
+                               String password,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
         Map<String, Object> infobody = new HashMap<>();
 
         infobody.put("success","false");

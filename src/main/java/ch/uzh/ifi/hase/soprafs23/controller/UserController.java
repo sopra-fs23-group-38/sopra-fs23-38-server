@@ -6,6 +6,10 @@ import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +53,18 @@ public class UserController {
         byId.ifPresent(user -> eacNotification.put("has_new", user.getHasNew()));
         return auxiliary.mapObjectToJson(eacNotification);
     }
+//    @GetMapping("/has_new")
+//    @MessageMapping("/has_new/{id}")
+//    @SendTo("/has_new/{id}")
+//    public String getHasNew(@DestinationVariable("id") String request) {
+//        Integer userId = Integer.valueOf(request);
+//        Optional<User> byId = userRepository.findById(userId);
+//
+//        Map<String, Object> eacNotification = new HashMap<>();
+//        eacNotification.put("has_new", false);
+//        byId.ifPresent(user -> eacNotification.put("has_new", user.getHasNew()));
+//        return auxiliary.mapObjectToJson(eacNotification);
+//    }
 
     @PostMapping("/has_new")
     public String cleanHasNew(HttpServletRequest request) {

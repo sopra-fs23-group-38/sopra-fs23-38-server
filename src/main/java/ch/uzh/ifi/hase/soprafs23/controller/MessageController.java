@@ -6,6 +6,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Notification;
 import ch.uzh.ifi.hase.soprafs23.repository.MessageRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.NotificationRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +15,6 @@ import ch.uzh.ifi.hase.soprafs23.entity.User;
 
 import java.sql.Timestamp;
 import java.util.*;
-import ch.uzh.ifi.hase.soprafs23.Auxiliary.auxiliary;
 
 @RestController
 @RequestMapping("/message")
@@ -23,11 +23,16 @@ public class MessageController {
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
 
-    public MessageController(MessageRepository messageRepository, UserRepository userRepository, NotificationRepository notificationRepository) {
+    private final SimpMessagingTemplate messagingTemplate;
+
+    public MessageController(MessageRepository messageRepository, UserRepository userRepository,
+                             NotificationRepository notificationRepository, SimpMessagingTemplate messagingTemplate) {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
         this.notificationRepository = notificationRepository;
+        this.messagingTemplate = messagingTemplate;
     }
+
 
     @PostMapping("/list")
     public String listMessages(@RequestParam("fromUserId") Integer fromUserId,
@@ -41,6 +46,7 @@ public class MessageController {
         List<Message> messages = messageRepository.listMessages(userIdsText);
 
         try {
+            messagingTemplate.convertAndSend("/topic/messages/" + userIdsText, messages);
             return auxiliary.messagesToJson(messages);
         } catch (Exception e) {
             Map<String, Object> infobody = new HashMap<>();
@@ -91,7 +97,7 @@ public class MessageController {
             }
             infobody.put("success","true");
         }
-
+        messagingTemplate.convertAndSend("/topic/notifications/" + toUserId, infobody);
         return auxiliary.mapObjectToJson(infobody);
     }
 }

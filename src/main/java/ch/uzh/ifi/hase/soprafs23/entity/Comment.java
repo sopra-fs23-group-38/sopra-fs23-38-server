@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;

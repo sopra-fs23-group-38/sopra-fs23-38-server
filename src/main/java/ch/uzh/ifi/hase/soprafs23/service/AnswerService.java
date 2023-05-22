@@ -25,6 +25,9 @@ public class AnswerService {
     private UserRepository userRepository;
 
     @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
     private NotificationRepository notificationRepository;
 
     @Autowired
@@ -64,14 +67,13 @@ public class AnswerService {
                 Notification notification = new Notification();// update the Notification
                 notification.setToUserId(question.getWho_asks());
                 notification.setUrl("/question/answer/" + answer.getId());
-                notification.setContent(ans_to_user.getUsername() + " answered to your question.");
+                notification.setContent(ans_to_user.getUsername() + "answered to your question.");
                 notification.setCreateTime(Date.from(Instant.now()));
                 notificationRepository.save(notification);
 
                 Optional<User> ans_to_question_user = userRepository.findById(question.getWho_asks());
                 if (ans_to_question_user.isPresent()) {
                     User ans_to_question_User = ans_to_question_user.get();
-//                    ans_to_question_User.setHasNew(true);
                     ans_to_question_User.setHasNew(ans_to_question_User.getHasNew()+1);
                     userRepository.save(ans_to_question_User);
                 }
@@ -87,8 +89,9 @@ public class AnswerService {
 
         int limit = 7;
         int offset = (pageIndex - 1) * limit;
+//        int allindex = answerRepository.countAnswersByQuestionId(questionId);
 
-        List<Answer> existingAnsToOneQuestion = answerRepository.findByQuestionIdOrderByVoteCountDesc(questionId, offset, limit);
+        List<Answer> existingAnsToOneQuestion = answerRepository.findByAllQuestionIdOrderByVoteCountDesc(questionId);
 
         if (existingAnsToOneQuestion != null) {
             for (Answer answer : existingAnsToOneQuestion) {
@@ -102,6 +105,7 @@ public class AnswerService {
 
                 answerInformation.put("who_answersId", who_answersId);
                 answerInformation.put("who_answers_name", who_answers.getUsername());
+                answerInformation.put("who_answers_avatar", who_answers.getAvatarUrl());
 
                 infobody.add(answerInformation);
 
@@ -123,6 +127,7 @@ public class AnswerService {
                 User user = u.orElse(null);
                 infobody.put("userId", who_answers);
                 infobody.put("username", user.getUsername());
+                infobody.put("useravatar",user.getAvatarUrl());
             }
             infobody.put("answer", answer);
             infobody.put("commentCount", answer.getComment_count());
@@ -151,7 +156,7 @@ public class AnswerService {
             answerInformation.put("questionId", answer.getQuestion_id());
             answerInformation.put("questionTitle", answerRepository.findAnswerToQuestionTitle(answer.getId()));
             answerInformation.put("change_time", answer.getChange_time());
-
+            answerInformation.put("vote_count",answer.getVote_count());
             if (answer.getComment_count() > 0) {
                 answerInformation.put("hasComment", "true");
             }
@@ -223,7 +228,7 @@ public class AnswerService {
             }
             voteRepository.deleteVotesByAnswerId(Id);
             // leave this as to delete comment further
-
+            commentRepository.deleteCommentByAnswer_ID(Id);
             answerRepository.deleteAnswerById(Id);
 
 

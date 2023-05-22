@@ -3,8 +3,11 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.Auxiliary.auxiliary;
 import ch.uzh.ifi.hase.soprafs23.entity.Question;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.repository.AnswerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.CommentRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.QuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,12 @@ import javax.servlet.http.HttpServletRequest;
 public class QuestionService {
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -51,7 +60,7 @@ public class QuestionService {
     }
 
     @Transactional
-    public String getAllQuestions(Integer pageIndex, String tag, HttpServletRequest request) {
+    public String getAllQuestions(Integer pageIndex, String tag, String orderBy, HttpServletRequest request) {
 
         List<Map<String, Object>> infobody = new ArrayList<>();
 
@@ -59,10 +68,18 @@ public class QuestionService {
         int offset = (pageIndex-1) * limit;
         List<Question> existingQuestions;
 
-        if (tag == null || tag.isEmpty()) {
-            existingQuestions = questionRepository.findTopNByOrderByTimeDesc(offset, limit);
+        if (Objects.equals(orderBy, "answer_count")) {
+            if (tag == null || tag.isEmpty()) {
+                existingQuestions = questionRepository.findTopNByOrderByAnswerCountDesc(offset, limit);
+            } else {
+                existingQuestions = questionRepository.findTopNByTagOrderByAnswerCountDesc(tag, offset, limit);
+            }
         } else {
-            existingQuestions = questionRepository.findTopNByTagOrderByTimeDesc(tag, offset, limit);
+            if (tag == null || tag.isEmpty()) {
+                existingQuestions = questionRepository.findTopNByOrderByTimeDesc(offset, limit);
+            } else {
+                existingQuestions = questionRepository.findTopNByTagOrderByTimeDesc(tag, offset, limit);
+            }
         }
 
         if (existingQuestions!= null) {
@@ -79,23 +96,21 @@ public class QuestionService {
 
                 questionInformation.put("who_asksId", who_asksId);
                 questionInformation.put("who_asks_name", who_asks.getUsername());
+                questionInformation.put("who_asks_avatar", who_asks.getAvatarUrl());
 
                 infobody.add(questionInformation);
             }
         }
         return auxiliary.listMapToJson(infobody);
-
     }
 
 
     public String getHowManyQuestions() {
-
-        double totalCount = questionRepository.count();
-        int howmanypages = (int) Math.ceil(totalCount / 7);
-
+//        System.out.println(questionRepository.count());
+        int howmanypages = (int) Math.ceil(questionRepository.count() / 7.0);
+        howmanypages = Math.max(howmanypages, 1); // Ensure at least 1 page
         Map<String, Object> infobody = new HashMap<>();
         infobody.put("howmanypages", howmanypages);
-
         return auxiliary.mapObjectToJson(infobody);
     }
 
@@ -110,6 +125,7 @@ public class QuestionService {
             questionInformation.put("lastChangeTime", question.getChange_time());
             questionInformation.put("title", question.getTitle());
             questionInformation.put("description", question.getDescription());
+            questionInformation.put("answer_count",question.getAnswerCount());
             if (question.getAnswerCount()>0) {
                 questionInformation.put("hasAnswer", "true");
             } else {
@@ -117,7 +133,7 @@ public class QuestionService {
             }
             infobody.add(questionInformation);
         }
-       return auxiliary.listMapToJson(infobody);
+        return auxiliary.listMapToJson(infobody);
     }
 
 
@@ -135,6 +151,7 @@ public class QuestionService {
                 User user = u.orElse(null);
                 infobody.put("userId", who_asks);
                 infobody.put("username", user.getUsername());
+                infobody.put("user_avatar",user.getAvatarUrl());
             }
             infobody.put("question", question);
             infobody.put("answerCount", question.getAnswerCount());
@@ -168,6 +185,12 @@ public class QuestionService {
         Map<String, Object> infobody= new HashMap<>();
 
         questionRepository.deleteById(Id);
+        answerRepository.deleteAnswerByQuestion_id(Id);
+
+        List<Integer> answer_id_list = answerRepository.getAllIdByQuestion_id(Id);
+        for (Integer id :answer_id_list){
+            commentRepository.deleteCommentByAnswer_ID(id);
+        }
         infobody.put("success", "true");
 
         return auxiliary.mapObjectToJson(infobody);
