@@ -3,8 +3,15 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'idea'
-    id "org.sonarqube" version "3.1.1"
     id 'jacoco'
+    id "org.sonarqube" version "3.5.0.2730"
+}
+sonarqube {
+  properties {
+    property "sonar.projectKey", "sopra-fs23-group-38_sopra-fs23-38-server"
+    property "sonar.organization", "sopra-fs23-group-38"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
 }
 
 group 'ch.uzh.ifi.hasel'
