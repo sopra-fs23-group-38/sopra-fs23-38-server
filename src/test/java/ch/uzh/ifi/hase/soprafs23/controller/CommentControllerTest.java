@@ -1,28 +1,28 @@
-package ch.uzh.ifi.hase.soprafs23.controller;
+// package ch.uzh.ifi.hase.soprafs23.controller;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Comment;
-import ch.uzh.ifi.hase.soprafs23.repository.CommentRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.messaging.MessagingException;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+// import ch.uzh.ifi.hase.soprafs23.entity.Comment;
+// import ch.uzh.ifi.hase.soprafs23.repository.CommentRepository;
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+// import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+// import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.boot.test.mock.mockito.MockBean;
+// import org.springframework.context.annotation.Import;
+// import org.springframework.http.HttpStatus;
+// import org.springframework.http.MediaType;
+// import org.springframework.messaging.MessagingException;
+// import org.springframework.messaging.simp.SimpMessagingTemplate;
+// import org.springframework.mock.web.MockHttpServletResponse;
+// import org.springframework.test.context.junit.jupiter.SpringExtension;
+// import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Optional;
+// import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+// import static org.assertj.core.api.Assertions.assertThat;
+// import static org.mockito.Mockito.*;
+// import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 // //@Import(CommentController.class)
 // @ExtendWith(SpringExtension.class)
 // @SpringBootTest
@@ -124,4 +124,4 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 //     }
 
 
-}
+// }
