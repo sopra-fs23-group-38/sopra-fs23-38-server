@@ -17,6 +17,7 @@ sonarqube {
     property 'sonar.exclusions', '**/generated/**'
     property 'sonar.jacoco.reportPaths', file("${project.buildDir}/jacoco/test.exec").path
     property 'sonar.jacoco.reportMissing.force.zero', 'true'
+    property "sonar.projectName", "sopra-fs23-group-38-server"
   }
 }
 
