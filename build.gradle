@@ -11,6 +11,12 @@ sonarqube {
     property "sonar.projectKey", "sopra-fs23-group-38_sopra-fs23-38-server"
     property "sonar.organization", "sopra-fs23-group-38"
     property "sonar.host.url", "https://sonarcloud.io"
+    property 'sonar.java.coveragePlugin', 'jacoco'
+    property 'sonar.coverage.jacoco.xmlReportPaths', file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml").path
+    property 'sonar.test.inclusions', '**/*Test.class'
+    property 'sonar.exclusions', '**/generated/**'
+    property 'sonar.jacoco.reportPaths', file("${project.buildDir}/jacoco/test.exec").path
+    property 'sonar.jacoco.reportMissing.force.zero', 'true'
   }
 }
 
