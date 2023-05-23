@@ -36,7 +36,7 @@ public class CommentService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    Integer comment_count = 0;
+    int comment_count =0;
 
     @Transactional
     public String createComment(Integer answerID, String content, Integer parentId, HttpServletRequest request) {
@@ -53,7 +53,7 @@ public class CommentService {
                 Optional<Answer> answer = answerRepository.findById(answerID);
                 if (answer.isPresent()) {
                     Answer comment_answer = answer.orElse(null);
-                    comment_answer.setComment_count(comment_answer.getComment_count()+1);
+                    comment_answer.setComment_count(comment_answer.getComment_count() + 1);
 
                     Comment newComment = new Comment();
                     newComment.setWho_comments(who_comments);
@@ -64,62 +64,60 @@ public class CommentService {
 
                     commentRepository.save(newComment);
 
-                    if (newComment.getId() != null) {
-                        infobody.put("success", "true");
+                    infobody.put("success", "true");
 
 
-                        if (parentId != null){ //这里是子comment对于母comment的提醒
-                            infobody.put("type", "comment");
-                            Optional<Comment> p_Comment = commentRepository.findById(parentId);
-                            if (p_Comment.isPresent()){
-                                Comment parentComment = p_Comment.orElse(null);
-                                User p_Comment_user = userRepository.findById(parentComment.getWho_comments()).orElse(null);
-                                if (p_Comment_user != null){
-                                    Notification notification = new Notification();
-                                    notification.setToUserId(p_Comment_user.getId());
-                                    notification.setUrl("/question/answer/" + comment_answer.getId());
-                                    notification.setContent(comment_user.getUsername() + " replied to your comment.");
-                                    notification.setCreateTime(new Timestamp(System.currentTimeMillis()));
-                                    notificationRepository.save(notification);
-
-                                    p_Comment_user.setHasNew(p_Comment_user.getHasNew()+1);
-                                    userRepository.save(p_Comment_user);
-                                }
+                    if (parentId != null) { //这里是子comment对于母comment的提醒
+                        infobody.put("type", "comment");
+                        Optional<Comment> p_Comment = commentRepository.findById(parentId);
+                        if (p_Comment.isPresent()) {
+                            Comment parentComment = p_Comment.orElse(null);
+                            User p_Comment_user = userRepository.findById(parentComment.getWho_comments()).orElse(null);
+                            if (p_Comment_user != null) {
                                 Notification notification = new Notification();
-                                notification.setToUserId(comment_answer.getWho_answers());
+                                notification.setToUserId(p_Comment_user.getId());
                                 notification.setUrl("/question/answer/" + comment_answer.getId());
-                                notification.setContent(comment_user.getUsername() + " commented your answer.");
+                                notification.setContent(comment_user.getUsername() + " replied to your comment.");
                                 notification.setCreateTime(new Timestamp(System.currentTimeMillis()));
                                 notificationRepository.save(notification);
 
-                                Optional<User> c_ans_er = userRepository.findById(comment_answer.getWho_answers());
-                                if (c_ans_er.isPresent()) {
-                                    User a_ans_user = c_ans_er.orElse(null);
-                                    a_ans_user.setHasNew(a_ans_user.getHasNew()+1);
-                                    userRepository.save(a_ans_user);
-                                }
-
+                                p_Comment_user.setHasNew(p_Comment_user.getHasNew() + 1);
+                                userRepository.save(p_Comment_user);
                             }
-                            return auxiliary.mapObjectToJson(infobody);
+                            Notification notification = new Notification();
+                            notification.setToUserId(comment_answer.getWho_answers());
+                            notification.setUrl("/question/answer/" + comment_answer.getId());
+                            notification.setContent(comment_user.getUsername() + " commented your answer.");
+                            notification.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                            notificationRepository.save(notification);
 
-                        }// 这里是母comment对于回答的提醒
-                        infobody.put("type", "answer");
+                            Optional<User> c_ans_er = userRepository.findById(comment_answer.getWho_answers());
+                            if (c_ans_er.isPresent()) {
+                                User a_ans_user = c_ans_er.orElse(null);
+                                a_ans_user.setHasNew(a_ans_user.getHasNew() + 1);
+                                userRepository.save(a_ans_user);
+                            }
 
-                        Notification notification = new Notification();
-                        notification.setToUserId(comment_answer.getWho_answers());
-                        notification.setUrl("/question/answer/" + comment_answer.getId());
-                        notification.setContent(comment_user.getUsername() + " commented your answer.");
-                        notification.setCreateTime(new Timestamp(System.currentTimeMillis()));
-                        notificationRepository.save(notification);
-
-
-                        Optional<User> c_ans_er = userRepository.findById(comment_answer.getWho_answers());
-                        if (c_ans_er.isPresent()) {
-                            User a_ans_user = c_ans_er.orElse(null);
-//                            a_ans_user.setHasNew(true);
-                            a_ans_user.setHasNew(a_ans_user.getHasNew()+1);
-                            userRepository.save(a_ans_user);
                         }
+                        return auxiliary.mapObjectToJson(infobody);
+
+                    }// 这里是母comment对于回答的提醒
+                    infobody.put("type", "answer");
+
+                    Notification notification = new Notification();
+                    notification.setToUserId(comment_answer.getWho_answers());
+                    notification.setUrl("/question/answer/" + comment_answer.getId());
+                    notification.setContent(comment_user.getUsername() + " commented your answer.");
+                    notification.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                    notificationRepository.save(notification);
+
+
+                    Optional<User> c_ans_er = userRepository.findById(comment_answer.getWho_answers());
+                    if (c_ans_er.isPresent()) {
+                        User a_ans_user = c_ans_er.orElse(null);
+//                            a_ans_user.setHasNew(true);
+                        a_ans_user.setHasNew(a_ans_user.getHasNew() + 1);
+                        userRepository.save(a_ans_user);
                     }
                 }
             }
@@ -158,7 +156,9 @@ public class CommentService {
         }
         int totalComments = countComments(infobody);
 
-        infobody.get(0).put("totalcount",totalComments);
+        if (!infobody.isEmpty()) {
+            infobody.get(0).put("totalcount",totalComments);
+        }
 
         return auxiliary.CommentListToJson(infobody);
     }
@@ -173,7 +173,7 @@ public class CommentService {
         return count;
     }
 
-    private void addRepliesToList(List<Map<String, Object>> repliesList, Comment comment) {
+    void addRepliesToList(List<Map<String, Object>> repliesList, Comment comment) {
         List<Comment> replies = commentRepository.findByParentID(comment.getId()); //最后一个子comment因为没有任何回复了，所以replies为空list
         for (Comment reply : replies) {
             Map<String, Object> replyMap = new HashMap<>();
@@ -188,9 +188,14 @@ public class CommentService {
             replyMap.put("content", reply.getContent());
             comment_count +=1;
             List<Map<String, Object>> repliesToReplyList = new ArrayList<>();
-            addRepliesToList(repliesToReplyList, reply);
             replyMap.put("replies", repliesToReplyList);
             repliesList.add(replyMap);
+            if (repliesToReplyList.isEmpty()){
+                return;
+            }
+            addRepliesToList(repliesToReplyList, reply);
+
+
         }
     }
 
@@ -228,6 +233,7 @@ public class CommentService {
             for(Comment c : commentList) {
                 Map<String, Object> eachCommentMap = new HashMap<>();
                 eachCommentMap.put("commentTime", c.getChange_time());
+                //---------增加
                 Integer parentid = c.getParentCommentId();
                 Optional<Answer> c_ans= answerRepository.findById(c.getAnswer_ID());
                 if (c_ans.isPresent()){
@@ -240,6 +246,7 @@ public class CommentService {
                 else{
                     eachCommentMap.put("commentparent","Reply to Comment");
                 }
+                //---------增加
                 eachCommentMap.put("commentContent", c.getContent());
                 eachCommentMap.put("commentType", 0);
                 eachCommentMap.put("commentId", c.getId());
