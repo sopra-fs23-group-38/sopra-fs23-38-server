@@ -52,8 +52,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Integer> {
             "WHERE id = ?1", nativeQuery = true)
     Integer findRowIndexById(Integer id);
 
-    @Query(value = "DELETE FROM answer WHERE question_id = ?1",nativeQuery = true)
-    void deleteAnswerByQuestion_id(Integer id);
+   
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM answer WHERE question_id = ?1",nativeQuery = true)
