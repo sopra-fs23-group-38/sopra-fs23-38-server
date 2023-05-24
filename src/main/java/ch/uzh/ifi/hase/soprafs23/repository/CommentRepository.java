@@ -3,9 +3,11 @@ package ch.uzh.ifi.hase.soprafs23.repository;
 import ch.uzh.ifi.hase.soprafs23.entity.Answer;
 import ch.uzh.ifi.hase.soprafs23.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 
