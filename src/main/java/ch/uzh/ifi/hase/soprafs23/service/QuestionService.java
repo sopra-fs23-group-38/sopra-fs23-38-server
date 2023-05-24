@@ -184,13 +184,14 @@ public class QuestionService {
     public String deleteQuestion(Integer Id, HttpServletRequest request) {
         Map<String, Object> infobody= new HashMap<>();
 
-        questionRepository.deleteById(Id);
-        answerRepository.deleteAnswerByQuestion_id(Id);
-
         List<Integer> answer_id_list = answerRepository.getAllIdByQuestion_id(Id);
         for (Integer id :answer_id_list){
             commentRepository.deleteCommentByAnswer_ID(id);
         }
+
+        answerRepository.deleteAnswerByQuestion_id(Id);
+        questionRepository.deleteById(Id);
+
         infobody.put("success", "true");
 
         return auxiliary.mapObjectToJson(infobody);
