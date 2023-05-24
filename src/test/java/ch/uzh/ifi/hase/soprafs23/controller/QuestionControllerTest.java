@@ -31,7 +31,8 @@ class QuestionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
+    @MockBean
+    private QuestionRepository mockquestionRepository;
     @MockBean
     private QuestionService mockQuestionService;
     @MockBean
