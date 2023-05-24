@@ -188,13 +188,9 @@ public class CommentService {
             replyMap.put("content", reply.getContent());
             comment_count +=1;
             List<Map<String, Object>> repliesToReplyList = new ArrayList<>();
+            addRepliesToList(repliesToReplyList, reply);
             replyMap.put("replies", repliesToReplyList);
             repliesList.add(replyMap);
-            if (repliesToReplyList.isEmpty()){
-                return;
-            }
-            addRepliesToList(repliesToReplyList, reply);
-
 
         }
     }
