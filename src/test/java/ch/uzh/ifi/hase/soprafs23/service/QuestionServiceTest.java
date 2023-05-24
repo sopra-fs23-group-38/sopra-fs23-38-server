@@ -116,10 +116,40 @@ class QuestionServiceTest {
         // when(mockQuestionRepository.findTopNByTagOrderByTimeDesc("tag", 0, 0)).thenReturn(Collections.emptyList());
 
         // Run the test
-        final String result = questionServiceUnderTest.getAllQuestions(0, "tag","answer_count", request);
+        final String result = questionServiceUnderTest.getAllQuestions(0, null,"tag", request);
 
         // Verify the results
         Assertions.assertNotNull(result);
+    }
+    @Test
+    void testGetAllQuestions_existingQuestions() {
+        // Setup
+        final MockHttpServletRequest request = new MockHttpServletRequest();
+        // when(mockQuestionRepository.findTopNByTagOrderByTimeDesc("tag", 0, 0)).thenReturn(Collections.emptyList());
+        List<Question> existingQuestions = new ArrayList<>();
+        Question question1 = new Question();
+        question1.setId(1);
+        question1.setTitle("Question 1");
+        // Set other properties
+        existingQuestions.add(question1);
+        // Mock the user data
+        User user = new User();
+        user.setId(1);
+        user.setUsername("John");
+        user.setAvatarUrl("avatar.jpg");
+        // Set other properties
+
+        // Mock the repository methods
+        when(mockQuestionRepository.findTopNByOrderByTimeDesc(anyInt(), anyInt())).thenReturn(existingQuestions);
+        when(mockQuestionRepository.findQuestionerIdById(eq(1))).thenReturn(1);
+        when(mockQuestionRepository.findUserById(eq(1))).thenReturn(user);
+        // Run the test
+        final String result = questionServiceUnderTest.getAllQuestions(1, null,null, request);
+
+        // Verify the results
+        Assertions.assertNotNull(result);
+
+
     }
 
     @Test
