@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface AnswerRepository extends JpaRepository<Answer, Integer> {
@@ -52,12 +53,11 @@ public interface AnswerRepository extends JpaRepository<Answer, Integer> {
             "WHERE id = ?1", nativeQuery = true)
     Integer findRowIndexById(Integer id);
 
-   
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM answer WHERE question_id = ?1",nativeQuery = true)
     void deleteAnswerByQuestion_id(Integer id);
-    
+
     @Query(value = "SELECT id FROM answer WHERE question_id = ?1",nativeQuery = true)
     List<Integer> getAllIdByQuestion_id(Integer id);
 
