@@ -75,17 +75,24 @@ public class CommentController {
     @DeleteMapping("/delete")
     public String deleteById(@RequestParam("commentId") Integer commentId) {
         int questionID = 0;
+        int answerID = 0;
+        int childCommentsCount = 0;
+
         Optional<Comment> byId = commentRepository.findById(commentId);
         if (byId.isPresent()) {
 //            resultMap.put("success","true");
             Comment comment = byId.get();
-            Integer ab = comment.getAnswer_ID();
-            Optional<Answer> byasd = answerRepository.findById(ab);
+            answerID = comment.getAnswer_ID();
+            Optional<Answer> byasd = answerRepository.findById(answerID);
 
             if (byasd.isPresent()){
                 Answer sad = byasd.get();
                 questionID = sad.getQuestion_id();
-                sad.setComment_count(sad.getComment_count()-1);
+
+                childCommentsCount = commentRepository.countByParentId(commentId);
+
+                sad.setComment_count(sad.getComment_count() - (childCommentsCount + 1));
+
                 answerRepository.save(sad);
             }
         }
@@ -96,8 +103,12 @@ public class CommentController {
         int pageIndex = 1;
         HttpServletRequest request =null;
         String result = answerService.getAllAnsToOneQuestion(questionID, pageIndex,request);
-        System.out.println("看有没有排xu"+result);
+      
         messagingTemplate.convertAndSend( "/topic/getAllAnstoOneQ/"+questionID, result);
+
+
+        String result1 = commentService.getAllComments(answerID);
+        messagingTemplate.convertAndSend( "/topic/getAllComments/"+answerID, result1);
         return auxiliary.mapObjectToJson(resultMap);
     }
 }
