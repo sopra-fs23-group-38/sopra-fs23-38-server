@@ -35,7 +35,7 @@ class UserServiceTest {
         // Setup
         final MockHttpServletRequest request = new MockHttpServletRequest();
         final MockHttpServletResponse response = new MockHttpServletResponse();
-
+        request.addParameter("username","username");
         // Configure UserRepository.findByUsername(...).
         final User user = new User();
         user.setId(0);
