@@ -25,7 +25,7 @@ class QuestionTest {
         // Setup
         // Run the test
         questionUnderTest.setAnswerCount(0);
-
+        questionUnderTest.getTag();
         // Verify the results
     }
 }
