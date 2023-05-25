@@ -73,7 +73,7 @@ public class ChatController {
     }}}
 
     @MessageMapping("/insert/{fromUserId}/{toUserId}")
-    public void insertComment(Message message) {
+    public void insertComment(Message message) throws JsonProcessingException, JsonProcessingException {
         List<String> userIds = new ArrayList<>();
 
         userIds.add(message.getFromUserId().toString());
@@ -82,21 +82,23 @@ public class ChatController {
         message.setUserIds(String.join(",", userIds));
         message.setCreateTime(new Timestamp(System.currentTimeMillis()));
         message.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        messageRepository.save(message);
+
+        // Save the message
+        Message savedMessage = messageRepository.save(message);
 
         Map<String, Object> infobody= new HashMap<>();
         infobody.put("success","false");
-        if (message.getId() != null) {
-            Optional<User> byId = userRepository.findById(message.getFromUserId());
+        if (savedMessage.getId() != null) {
+            Optional<User> byId = userRepository.findById(savedMessage.getFromUserId());
             if (byId.isPresent()) {
                 User fromUser = byId.get();
                 Notification notification = new Notification();
-                notification.setToUserId(message.getToUserId());
-                notification.setUrl("/chat?fromUserId=" + message.getToUserId() + "&toUserId=" + message.getFromUserId());
+                notification.setToUserId(savedMessage.getToUserId());
+                notification.setUrl("/chat?fromUserId=" + savedMessage.getToUserId() + "&toUserId=" + savedMessage.getFromUserId());
                 notification.setContent(fromUser.getUsername() + " SEND YOU A MESSAGE");
                 notification.setCreateTime(new Timestamp(System.currentTimeMillis()));
                 notificationRepository.save(notification);
-                Optional<User> byId2 = userRepository.findById(message.getToUserId());
+                Optional<User> byId2 = userRepository.findById(savedMessage.getToUserId());
                 boolean present = byId2.isPresent();
                 if (present) {
                     User toUser = byId2.get();
@@ -107,16 +109,31 @@ public class ChatController {
             infobody.put("success","true");
 
             List<String> userIds1 = new ArrayList<>();
-            userIds1.add(message.getFromUserId().toString());
-            userIds1.add(message.getToUserId().toString());
+            userIds1.add(savedMessage.getFromUserId().toString());
+            userIds1.add(savedMessage.getToUserId().toString());
             Collections.sort(userIds1);
             String userIdsText = String.join(",", userIds1);
-            List<Message> messages = messageRepository.listMessages(userIdsText);
-            String messagesJson = auxiliary.messagesToJson(messages);
-            messagingTemplate.convertAndSend("/topic/messages/" + message.getFromUserId()+","+message.getToUserId(), messagesJson);
-            listMessages(message.getToUserId(),message.getFromUserId());
+
+            // Get the avatar URLs of the sender and receiver
+            String fromUserAvatar = userRepository.findById(savedMessage.getFromUserId()).get().getAvatarUrl();
+            String toUserAvatar = userRepository.findById(savedMessage.getToUserId()).get().getAvatarUrl();
+
+            // Create a map from the message
+            Map<String, Object> messageMap = new ObjectMapper().convertValue(savedMessage, Map.class);
+            messageMap.put("fromUserAvatar", fromUserAvatar);
+            messageMap.put("toUserAvatar", toUserAvatar);
+
+            // Convert the messageMap to JSON
+            String messageJson = new ObjectMapper().writeValueAsString(messageMap);
+
+            // Broadcast the message
+            messagingTemplate.convertAndSend("/topic/messages/" + savedMessage.getFromUserId()+","+savedMessage.getToUserId(), messageJson);
+
+            listMessages(savedMessage.getToUserId(),savedMessage.getFromUserId());
         }
     }
+    
+    
     @MessageMapping("/list/{fromUserId}/{toUserId}")
     public void listMessages(@DestinationVariable Integer fromUserId,
                              @DestinationVariable Integer toUserId) {
