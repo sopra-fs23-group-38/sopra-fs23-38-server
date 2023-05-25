@@ -22,7 +22,7 @@ The platform also has some social features, with tagging for specific questions 
 
 This is a diagram of the functionality of our Web Application:
 
-![image](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/blob/main/img/overview.png)
+![Introduction](img/overview.png)
 
 ## Technologies
 
