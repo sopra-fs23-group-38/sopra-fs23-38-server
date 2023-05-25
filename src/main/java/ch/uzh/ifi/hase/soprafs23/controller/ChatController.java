@@ -11,6 +11,8 @@ import ch.uzh.ifi.hase.soprafs23.service.AnswerService;
 import ch.uzh.ifi.hase.soprafs23.service.CommentService;
 import ch.uzh.ifi.hase.soprafs23.service.MessageService;
 import ch.uzh.ifi.hase.soprafs23.service.QuestionService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
