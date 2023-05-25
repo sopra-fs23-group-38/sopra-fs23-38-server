@@ -1,128 +1,121 @@
-[//]: # (<p align="center">)
-
-[//]: # (  <img src="https://readme-typing-svg.demolab.com/?lines=Sopra+Group+20!;Guess+The+Country!&font=Fira%20Code&center=true&width=600&height=80&duration=4000&pause=500" alt="Example Usage - README Typing SVG">)
-
-[//]: # (</p>)
-
-[//]: # ()
-[//]: # (<div align="center">)
-
-[//]: # ()
-[//]: # ([![Lines of Code]&#40;https://sonarcloud.io/api/project_badges/measure?project=sopra-fs23-group-20_client&metric=ncloc&#41;]&#40;https://sonarcloud.io/summary/new_code?id=sopra-fs23-group-20_client&#41;)
-
-[//]: # ([![Vulnerabilities]&#40;https://sonarcloud.io/api/project_badges/measure?project=sopra-fs23-group-20_client&metric=vulnerabilities&#41;]&#40;https://sonarcloud.io/summary/new_code?id=sopra-fs23-group-20_client&#41;)
-
-[//]: # ()
-[//]: # (</div>)
+[//]: # '<p align="center">'
+[//]: # '  <img src="https://readme-typing-svg.demolab.com/?lines=Sopra+Group+20!;Guess+The+Country!&font=Fira%20Code¢er=true&width=600&height=80&duration=4000&pause=500" alt="Example Usage - README Typing SVG">'
+[//]: # "</p>"
+[//]: #
+[//]: # '<div align="center">'
+[//]: #
+[//]: # "[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=sopra-fs23-group-20_client&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=sopra-fs23-group-20_client)"
+[//]: # "[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=sopra-fs23-group-20_client&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=sopra-fs23-group-20_client)"
+[//]: #
+[//]: # "</div>"
 
 ## Introduction
 
-This is an online Q&A platform based on UZH IFI's study and life, we hope the students can exchange the thoughts on this platform and get the answers they wish for.
+This is an online and real-time Q&A platform based on UZH IFI's study and life, we hope the students can exchange the thoughts on this platform and get the answers immediately they wish for.
+
+The platform also has some social features, with tagging for specific questions and live chat between users, and we hope that everyone will share their daily routines to increase their social circle within UZH.
+
+This is a diagram of the functionality of our Web Application:
 
 ## Technologies
 
 - [Springboot](https://spring.io/) - Java framework to create a micro service
 - [Gradle](https://gradle.org/) - Automated building and management tool
 - [MySQL](https://www.mysql.com/) - Database
-- [React](https://reactjs.org/docs/getting-started.html) - Javascript library for the whole frontend
-- [Ant Design](https://ant.design/) - React design Component library
 - [Github Projects](https://github.com/explore) - Project Management
-- [Figma](https://figma.com/) - Mockups
 - [Google Cloud](https://cloud.google.com/) - Deployment
 - [SonarCloud](https://sonarcloud.io/) - Testing & Feedback of code quality
 
-## High-level components（需要修改）
+## High-level components
 
+### User
 
+Users are the ones who create questions, answer questions, add comments and send messages to each other. Users can choose their username, password and avatar during registration and save them to the database, where the primary key ID is automatically stored.
 
-## Deployment and Database(需要修改)
+### Question
+
+Questions can be created with a title, description and tag, and also have their own questionID as the primary key,as well as storing the time the question was created and the ID of the User who created the question. The tag could be used to filtered by users. Question will also store the number of Answers so that the user can sort the question by the number of Answers to determine the hotness of the question.
+
+### Answer
+
+Answer is the reply made by the User under each question. Each Answer will also store the corresponding QuestionID and UserID, and because the Answer itself has an upvote/downvote function, the Answer will also store the votecount attribute. Users can also add comments to different Answers, which will be stored in the comment count and displayed.
+
+### Comment
+
+A Comment is a reply made by a User in response to an Answer or Comment itself. Because the Comment is displayed in a nested form, the Comment stores its own ID and the ID of its answer section: AnswerID or ParentCommentID, as well as the UserID and the time of the comment.
+
+### Message
+
+Message is a tool for communication between different users, it stores the IDs of two different users and the time of creation. At the same time, we also store the messages between different users.
+
+### WebSocket
+In order to make our Application more real-time, we use WebSockets in all key areas such as Chatting between users, creating and answering questions, adding comments and notes, and almost all functions are real-time.
+
+## Deployment and Database
 
 ### Deployment on Google Cloud
-Our application is hosted on both [Google Cloud URL](https://sopra-fs23-group-20-client.oa.r.appspot.com/) and [Raspberry Pi URL](https://sopra-fs23-group20-client.pktriot.net/). To differentiate between the server URL for those two versions, a custom build is required for the Raspberry Pi version. This specification is outlined in the "scripts" and "build:custom" sections of our [package.json](package.json) file.
 
-When the "npm run build:custom" command is executed, the REACT_APP_API_URL is automatically set to the Raspberry Pi's hosted server address: [https://sopra-fs23-group20-server.pktriot.net](https://sopra-fs23-group20-server.pktriot.net). This ensures that the [getDomain.ts](src/helpers/getDomain.ts) script sets the correct server URL, which is crucial for establishing a connection between the client and the server.
+Our application is hosted on [Google Cloud URL](https://sopra-fs23-group-38-client.oa.r.appspot.com/). Also our server status is available in this link [Google Cloud URL](https://sopra-fs23-group-38-server.oa.r.appspot.com/). All cloud deployments are now complete and can be accessed directly via the link above.
 
-At some point we will run out of credits in the Google Cloud, in this case only the Raspberry PI version will be accessible.
 ### MySQL Database
-## Launch and Development
 
-## Prerequisites and Installation
+This application use MySQL database to store data.
 
-For your local development environment, you will need Node.js. You can download it [here](https://nodejs.org). All other dependencies, including React, get installed with:
+## Launch & Development
 
-`npm install`
+For your local development environment, you may need gradle to build this application and create your own database in this steps:
 
-Run this command before you start your application for the first time. Next, you can start the app with:
+### Create your own database of MySQL:
 
-`npm run dev`
+Firstly you need to open your own MySQL server in your local machine, for more information you could get access to this link [MySQL](https://www.mysql.com/).
 
-Now you can open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+And when you open your own MySQL server, you should also change the datasource.url, username and password yourself to make it link properly in [application.properties](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/blob/main/src/main/resources/application.properties).
 
-Notice that the page will reload if you make any edits. You will also see any lint errors in the console (use Google Chrome).
+### Building with Gradle
 
-### Testing
+You can use the local Gradle Wrapper to build the application.
 
-Testing is optional, and you can run the tests with `npm run test`.
-This launches the test runner in an interactive watch mode. See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- macOS: `./gradlew`
+- Linux: `./gradlew`
+- Windows: `./gradlew.bat`
 
-> For macOS user running into a 'fsevents' error: https://github.com/jest-community/vscode-jest/issues/423
+More Information about [Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html) and [Gradle](https://gradle.org/docs/).
 
 ### Build
 
-Finally, `npm run build` builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance: the build is minified, and the filenames include hashes.<br>
+```bash
+./gradlew build
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Run
 
-## Illustrations
-### Page
-The landing page should look like a modern "landing page" by giving the user a short introduction and should make the user clicking on the register button.  <br /> <br />
-![Landing Page](src/components/views/images/LandingPage.png)
+```bash
+./gradlew bootRun
+```
 
-### Index Page
-The index page should be the first page the user sees before logging in. It should contain a list of all the questions that users created. <br /> <br />
+You can verify that the server is running by visiting `localhost:8080` in your browser. You also have to check whether your server URL is set properly on `localhost:8080`.
 
-### Register Page
-The register page should be the first page the user sees after clicking on the register button. It should contain a form where the user can enter his username, password, email and set their avatar. <br /> <br />
+### Testing
 
-### Login Page
-The login page should be the first page the user sees after clicking on the login button. It should contain a form where the user can enter his username and password. <br /> <br />
+Testing is optional, and you can run the tests with
 
-### Search Page
-The search page should be the first page the user sees after clicking on the search button. It should contain a form where the user can enter a search term. <br /> <br />
+```bash
+./gradlew test
+```
 
+## Roadmap
 
-### Create Question Page
-The create question page should be the first page the user sees after clicking on the create question button. It should contain a form where the user can enter a question. <br /> <br />
+### Access to the Switch.edu interface
 
+Firstly, we wanted to make the app accessible and beneficial to more UZH students and staff, so firstly we wanted the login interface to be accessible to Switch.edu, allowing UZH students to discuss and share and socialise directly on the app in their real names.
 
-### Answer Question Page
-The answer question page should be the first page the user sees after clicking on the answer question button. It should contain a form where the user can enter a answer. <br /> <br />
+### More user actions
 
+At the moment our users can do a lot within the app, but we think there is still room for improvement. For example, users can bookmark or share questions that interest them, or they can personalise their user centre to better present themselves.
 
-### User Center Page
-The user center page should be the first page the user sees after clicking on the user center button. It should contain a list about questions, answers and comments they created. <br /> <br />
+### More social features
 
-### Chat Page
-The chat page should be the first page the user sees after clicking on the chat button. It should contain a box about messages with other users. <br /> <br />
-
-## Roadmap（需要修改）
-
-### Mobile Compatibility
-
-Our web application is mostly mobile-friendly, but some pages may still require improvements in scaling for optimal viewing on different devices. Another idea in this area would be to implement the project as a dedicated mobile app.
-
-### Add additional Hints
-
-So far we have the following 5 hints based on which the users can try to guess a country: Population, Outline, Location, Flag and Capital. Ideas for additional hints: Most famous landmark, Currency, GDP, National Anthem, Neighboring Countries, ...
-
-### Friends System
-
-The option to add friends, compare yourself with them and invite them to a lobby.
-
-### Achievements
-
-To encourage user engagement and acknowledge accomplishments, it would make sense to implement a series of achievements, including: first correct country guess, first game played, first game won, first friend added, 10 correct country guesses, 10 games played, 10 games won, 10 friends added, and more.
+We want this application to be more than just a Q&A platform, but we want to use it as a social platform for UZH students internally. So I hope we can develop more social features, such as adding friends and following each other rather than just chatting.
 
 ## Authors and acknowledgment
 
@@ -133,7 +126,6 @@ To encourage user engagement and acknowledge accomplishments, it would make sens
 - **Yuanzhe Gao** - [Github](https://github.com/ArthasGAO)
 - **Qiyue Shang** - [Github](https://github.com/QiyueShang666)
 
-
 ### Supervision
 
 - **Hyeongkyun (Kaden) Kim** - [Github](https://github.com/hk-kaden-kim)
@@ -141,147 +133,3 @@ To encourage user engagement and acknowledge accomplishments, it would make sens
 ## License(最后改)
 
 [Apache license 2.0](https://github.com/sopra-fs23-group-38/server/blob/6dc8281b0a876fa1d310626a704e0e4bfa08b86d/LICENSE)
-[//]: # (<p align="center">)
-
-[//]: # (  <img src="https://readme-typing-svg.demolab.com/?lines=Sopra+Group+20!;Guess+The+Country!&font=Fira%20Code&center=true&width=600&height=80&duration=4000&pause=500" alt="Example Usage - README Typing SVG">)
-
-[//]: # (</p>)
-
-[//]: # ()
-[//]: # (<div align="center">)
-
-[//]: # ()
-[//]: # ([![Lines of Code]&#40;https://sonarcloud.io/api/project_badges/measure?project=sopra-fs23-group-20_client&metric=ncloc&#41;]&#40;https://sonarcloud.io/summary/new_code?id=sopra-fs23-group-20_client&#41;)
-
-[//]: # ([![Vulnerabilities]&#40;https://sonarcloud.io/api/project_badges/measure?project=sopra-fs23-group-20_client&metric=vulnerabilities&#41;]&#40;https://sonarcloud.io/summary/new_code?id=sopra-fs23-group-20_client&#41;)
-
-[//]: # ()
-[//]: # (</div>)
-
-## Introduction
-
-This is an online Q&A platform based on UZH IFI's study and life, we hope the students can exchange the thoughts on this platform and get the answers they wish for.
-
-## Technologies
-
-- [Springboot](https://spring.io/) - Java framework to create a micro service
-- [Gradle](https://gradle.org/) - Automated building and management tool
-- [MySQL](https://www.mysql.com/) - Database
-- [React](https://reactjs.org/docs/getting-started.html) - Javascript library for the whole frontend
-- [Ant Design](https://ant.design/) - React design Component library
-- [Github Projects](https://github.com/explore) - Project Management
-- [Figma](https://figma.com/) - Mockups
-- [Google Cloud](https://cloud.google.com/) - Deployment
-- [SonarCloud](https://sonarcloud.io/) - Testing & Feedback of code quality
-
-## High-level components（需要修改）
-
-
-
-## Deployment and Database(需要修改)
-
-### Deployment on Google Cloud
-Our application is hosted on both [Google Cloud URL](https://sopra-fs23-group-20-client.oa.r.appspot.com/) and [Raspberry Pi URL](https://sopra-fs23-group20-client.pktriot.net/). To differentiate between the server URL for those two versions, a custom build is required for the Raspberry Pi version. This specification is outlined in the "scripts" and "build:custom" sections of our [package.json](package.json) file.
-
-When the "npm run build:custom" command is executed, the REACT_APP_API_URL is automatically set to the Raspberry Pi's hosted server address: [https://sopra-fs23-group20-server.pktriot.net](https://sopra-fs23-group20-server.pktriot.net). This ensures that the [getDomain.ts](src/helpers/getDomain.ts) script sets the correct server URL, which is crucial for establishing a connection between the client and the server.
-
-At some point we will run out of credits in the Google Cloud, in this case only the Raspberry PI version will be accessible.
-### MySQL Database
-## Launch and Development
-
-## Prerequisites and Installation
-
-For your local development environment, you will need Node.js. You can download it [here](https://nodejs.org). All other dependencies, including React, get installed with:
-
-`npm install`
-
-Run this command before you start your application for the first time. Next, you can start the app with:
-
-`npm run dev`
-
-Now you can open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-Notice that the page will reload if you make any edits. You will also see any lint errors in the console (use Google Chrome).
-
-### Testing
-
-Testing is optional, and you can run the tests with `npm run test`.
-This launches the test runner in an interactive watch mode. See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-> For macOS user running into a 'fsevents' error: https://github.com/jest-community/vscode-jest/issues/423
-
-### Build
-
-Finally, `npm run build` builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance: the build is minified, and the filenames include hashes.<br>
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## Illustrations
-### Page
-The landing page should look like a modern "landing page" by giving the user a short introduction and should make the user clicking on the register button.  <br /> <br />
-![Landing Page](src/components/views/images/LandingPage.png)
-
-### Index Page
-The index page should be the first page the user sees before logging in. It should contain a list of all the questions that users created. <br /> <br />
-
-### Register Page
-The register page should be the first page the user sees after clicking on the register button. It should contain a form where the user can enter his username, password, email and set their avatar. <br /> <br />
-
-### Login Page
-The login page should be the first page the user sees after clicking on the login button. It should contain a form where the user can enter his username and password. <br /> <br />
-
-### Search Page
-The search page should be the first page the user sees after clicking on the search button. It should contain a form where the user can enter a search term. <br /> <br />
-
-
-### Create Question Page
-The create question page should be the first page the user sees after clicking on the create question button. It should contain a form where the user can enter a question. <br /> <br />
-
-
-### Answer Question Page
-The answer question page should be the first page the user sees after clicking on the answer question button. It should contain a form where the user can enter a answer. <br /> <br />
-
-
-### User Center Page
-The user center page should be the first page the user sees after clicking on the user center button. It should contain a list about questions, answers and comments they created. <br /> <br />
-
-### Chat Page
-The chat page should be the first page the user sees after clicking on the chat button. It should contain a box about messages with other users. <br /> <br />
-
-## Roadmap（需要修改）
-
-### Mobile Compatibility
-
-Our web application is mostly mobile-friendly, but some pages may still require improvements in scaling for optimal viewing on different devices. Another idea in this area would be to implement the project as a dedicated mobile app.
-
-### Add additional Hints
-
-So far we have the following 5 hints based on which the users can try to guess a country: Population, Outline, Location, Flag and Capital. Ideas for additional hints: Most famous landmark, Currency, GDP, National Anthem, Neighboring Countries, ...
-
-### Friends System
-
-The option to add friends, compare yourself with them and invite them to a lobby.
-
-### Achievements
-
-To encourage user engagement and acknowledge accomplishments, it would make sense to implement a series of achievements, including: first correct country guess, first game played, first game won, first friend added, 10 correct country guesses, 10 games played, 10 games won, 10 friends added, and more.
-
-## Authors and acknowledgment
-
-### Contributors
-
-- **Hangchen Xie** - [Github](https://github.com/hangchenxie)
-- **Yunlong Li** - [Github](https://github.com/1316827294)
-- **Yuanzhe Gao** - [Github](https://github.com/ArthasGAO)
-- **Qiyue Shang** - [Github](https://github.com/QiyueShang666)
-
-
-### Supervision
-
-- **Hyeongkyun (Kaden) Kim** - [Github](https://github.com/hk-kaden-kim)
-
-## License(最后改)
-
-[Apache license 2.0](https://github.com/sopra-fs23-group-38/server/blob/6dc8281b0a876fa1d310626a704e0e4bfa08b86d/LICENSE)
-
