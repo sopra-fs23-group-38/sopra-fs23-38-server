@@ -12,10 +12,16 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String title;
+    
+    @Column(columnDefinition="TEXT")
     private String description;
+    
     private Integer who_asks;
+    
     private Date change_time;
+    
     private Integer answer_count;
+    
     @Column(name = "tag")
     private String tag; // Add this line
 
