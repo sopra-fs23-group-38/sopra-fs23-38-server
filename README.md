@@ -35,23 +35,42 @@ This is a diagram of the functionality of our Web Application:
 
 Users are the ones who create questions, answer questions, add comments and send messages to each other. Users can choose their username, password and avatar during registration and save them to the database, where the primary key ID is automatically stored.
 
+[User](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/entity/User.java)
+
+[UserService](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/service/UserService.java)
+
 ### Question
 
 Questions can be created with a title, description and tag, and also have their own questionID as the primary key,as well as storing the time the question was created and the ID of the User who created the question. The tag could be used to filtered by users. Question will also store the number of Answers so that the user can sort the question by the number of Answers to determine the hotness of the question.
+
+[Question](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/entity/Question.java)
+
+[QuestionService](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/service/QuestionService.java)
 
 ### Answer
 
 Answer is the reply made by the User under each question. Each Answer will also store the corresponding QuestionID and UserID, and because the Answer itself has an upvote/downvote function, the Answer will also store the votecount attribute. Users can also add comments to different Answers, which will be stored in the comment count and displayed.
 
+[Answer](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/entity/Answer.java)
+
+[AnswerService](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/service/AnswerService.java)
+
 ### Comment
 
 A Comment is a reply made by a User in response to an Answer or Comment itself. Because the Comment is displayed in a nested form, the Comment stores its own ID and the ID of its answer section: AnswerID or ParentCommentID, as well as the UserID and the time of the comment.
+
+[Comment](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/entity/Comment.java)
+
+[CommentService](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/service/CommentService.java)
 
 ### Message
 
 Message is a tool for communication between different users, it stores the IDs of two different users and the time of creation. At the same time, we also store the messages between different users.
 
+[Message](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/entity/Message.java)
+
 ### WebSocket
+
 In order to make our Application more real-time, we use WebSockets in all key areas such as Chatting between users, creating and answering questions, adding comments and notes, and almost all functions are real-time.
 
 ## Deployment and Database
