@@ -10,9 +10,14 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    
+    @Column(columnDefinition="TEXT")
     private String content;
+    
     private Integer who_comments;
+    
     private Integer answer_ID;
+    
     private Date change_time;
 
     private Integer parentCommentId;
