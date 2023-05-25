@@ -22,7 +22,10 @@ This is a diagram of the functionality of our Web Application:
 - [Springboot](https://spring.io/) - Java framework to create a micro service
 - [Gradle](https://gradle.org/) - Automated building and management tool
 - [MySQL](https://www.mysql.com/) - Database
+- [React](https://reactjs.org/docs/getting-started.html) - Javascript library for the whole frontend
+- [Ant Design](https://ant.design/) - React design Component library
 - [Github Projects](https://github.com/explore) - Project Management
+- [Figma](https://figma.com/) - Mockups
 - [Google Cloud](https://cloud.google.com/) - Deployment
 - [SonarCloud](https://sonarcloud.io/) - Testing & Feedback of code quality
 
