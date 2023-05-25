@@ -32,8 +32,8 @@
 | 8        | Yuanzhe | [#33](https://github.com/sopra-fs23-group-38/sopra-fs23-38-client/issues/33)[#79](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/issues/79) | Import the external API to let users pich avatar during registration and modify the previous UI to make it more good-looking.
                                                         |
 | 8        | Qiyue | [#33](https://github.com/sopra-fs23-group-38/sopra-fs23-38-client/issues/33)[#79](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/issues/79) |Debug the running status of front-end and back-end, and complete the test of back-end services.
-|
+                                                       |
 | 8        | Yunlong | [#33](https://github.com/sopra-fs23-group-38/sopra-fs23-38-client/issues/33)[#79](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/issues/79) | Debug the front-end operation and complete the test of the back-end controller.
-|
+                                                     |
 | 8        | Hangchen | [#33](https://github.com/sopra-fs23-group-38/sopra-fs23-38-client/issues/33)[#79](https://github.com/sopra-fs23-group-38/sopra-fs23-38-server/issues/79) | Debug the connection between the back end and the database, and complete the exceptions and Auxiliary test of the back end.
-|
+                                                      |
