@@ -43,7 +43,7 @@ public class CommentService {
         Map<String, Object> infobody = new HashMap<>();
 
         //评论内容长度是否合法
-        if (content != null && content.length() > 0 && content.length() <= 200) {
+        if (content != null && content.length() > 0 && content.length() <= 500) {
             Integer who_comments = auxiliary.extractUserID(request);
             Optional<User> user = userRepository.findById(who_comments);
             //验证用户已登录
