@@ -12,7 +12,8 @@ public class Answer {
     private Integer question_id;
 
     private Integer who_answers;
-
+    
+    @Column(columnDefinition="TEXT")
     private String content;
 
     private Date change_time;
